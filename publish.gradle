@@ -67,10 +67,10 @@ publishing {
                 // Version control info, if you're using GitHub, follow the format as seen here
                 scm {
                     //修改成你的Git地址：
-                    connection = 'https://github.com/xiaolutang/MoonlightTreasureBox.git'
-                    developerConnection = 'https://github.com/xiaolutang/MoonlightTreasureBox.git'
+                    connection = 'https://github.com/cnoom/android-anr-analysis.git'
+                    developerConnection = 'https://github.com/cnoom/android-anr-analysis.git'
                     //分支地址：
-                    url = 'https://github.com/xiaolutang/MoonlightTreasureBox/tree/main'
+                    url = 'https://github.com/cnoom/android-anr-analysis/tree/main'
                 }
                 // A slightly hacky fix so that your POM will include any transitive dependencies
                 // that your library builds upon
