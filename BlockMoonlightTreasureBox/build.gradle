@@ -6,11 +6,11 @@ ext {
 apply from: '../publish.gradle'
 
 android {
-    compileSdk 28
+    compileSdk 33
 
     defaultConfig {
         minSdk 21
-        targetSdk 28
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -41,7 +41,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.1'

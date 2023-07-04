@@ -10,8 +10,8 @@ task androidSourcesJar(type: Jar) {
 }
 
 ext {
-    PUBLISH_GROUP_ID = 'io.github.xiaolutang'
-    PUBLISH_VERSION = '1.0.3'
+    PUBLISH_GROUP_ID = 'io.github.cnoom'
+    PUBLISH_VERSION = '1.0.0'
 }
 
 ext["signing.keyId"] = ''
