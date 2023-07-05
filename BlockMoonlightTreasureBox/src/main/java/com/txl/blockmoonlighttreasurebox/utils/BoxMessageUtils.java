@@ -13,12 +13,12 @@ public class BoxMessageUtils {
         try {
             msg = msg.trim();
             String[] msgA = msg.split(":");
-            if(msgA.length < 2){
-                return new BoxMessage();
-            }
             int what = Integer.parseInt(msgA[1].trim());
             //>>>>> Dispatching to Handler (android.view.ViewRootImpl$ViewRootHandler) {3346d43} com.example.test.MainActivity$1@7250fab
             msgA = msgA[0].split("\\{.*\\}");
+            if(msgA.length < 2){
+                return new BoxMessage();
+            }
             String callback = msgA[1];
             //>>>>> Dispatching to Handler (android.view.ViewRootImpl$ViewRootHandler)
             msgA = msgA[0].split("\\(");
@@ -28,7 +28,6 @@ public class BoxMessageUtils {
             msgA = msgA[1].split( "\\}" );
             boxMessage = new BoxMessage(handler,callback,what,msgA[0]);
         }catch (Exception e){
-            e.printStackTrace();
             boxMessage = new BoxMessage();
         }
         return boxMessage;
