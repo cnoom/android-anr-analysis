@@ -9,7 +9,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        minSdk 21
+        minSdk 19
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -29,10 +29,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
+
     externalNativeBuild {
         cmake {
             path "CMakeLists.txt"

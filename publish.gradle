@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
-task androidSourcesJar(type: Jar) {
+tasks.register('androidSourcesJar', Jar) {
     classifier = 'sources'
     from android.sourceSets.main.java.source
 
