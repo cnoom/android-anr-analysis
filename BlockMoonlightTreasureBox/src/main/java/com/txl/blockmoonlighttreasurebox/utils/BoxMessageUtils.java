@@ -13,6 +13,9 @@ public class BoxMessageUtils {
         try {
             msg = msg.trim();
             String[] msgA = msg.split(":");
+            if(msgA.length < 2){
+                return new BoxMessage();
+            }
             int what = Integer.parseInt(msgA[1].trim());
             //>>>>> Dispatching to Handler (android.view.ViewRootImpl$ViewRootHandler) {3346d43} com.example.test.MainActivity$1@7250fab
             msgA = msgA[0].split("\\{.*\\}");
