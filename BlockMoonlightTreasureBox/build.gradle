@@ -3,7 +3,6 @@ apply plugin: 'com.android.library'
 ext {
     PUBLISH_ARTIFACT_ID = 'BlockMoonlightTreasureBox'
 }
-apply from: '../publish.gradle'
 
 android {
     compileSdk 33
