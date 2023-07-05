@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 /**
  * Copyright (c) 2021, 唐小陆 All rights reserved.
@@ -32,37 +33,20 @@ public class SampleManagerImpl implements ISamplerManager {
     private final SamplerListenerChain samplerListenerChain  = new SamplerListenerChain();
     private SampleManagerImpl() {
         AbsSampler cpuSample = new CpuSample();
-        cpuSample.setSampleListener( new AbsSampler.SampleListener() {
-            @Override
-            public void onSampleEnd(String msgId, String msg) {
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        samplerListenerChain.onCpuSample( baseTime,msgId,msg );
-                        Log.d(TAG,"cpu sample end "+latch.getCount());
-                        latch.countDown();
-                    }
-                });
-
-            }
-        } );
+        cpuSample.setSampleListener((msgId, msg) -> AppExecutors.getInstance().diskIO().execute(() -> {
+            samplerListenerChain.onCpuSample( baseTime,msgId,msg );
+            Log.d(TAG,"cpu sample end "+latch.getCount());
+            latch.countDown();
+        }));
         anrSample.add( cpuSample );
 
         latchCount ++;
         AbsSampler stackSample = new StackSampler( Thread.currentThread() );
-        stackSample.setSampleListener( new AbsSampler.SampleListener() {
-            @Override
-            public void onSampleEnd(String msgId, String msg) {
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        samplerListenerChain.onMainThreadStackSample( baseTime,msgId,msg );
-                        Log.d(TAG,"main thread stack sample end "+latch.getCount());
-                        latch.countDown();
-                    }
-                });
-            }
-        } );
+        stackSample.setSampleListener((msgId, msg) -> AppExecutors.getInstance().diskIO().execute(() -> {
+            samplerListenerChain.onMainThreadStackSample( baseTime,msgId,msg );
+            Log.d(TAG,"main thread stack sample end "+latch.getCount());
+            latch.countDown();
+        }));
         anrSample.add( stackSample );
         latchCount ++;
     }
@@ -76,20 +60,16 @@ public class SampleManagerImpl implements ISamplerManager {
         Log.d(TAG,"startAnrSample ");
         inSample.set(true);
         createLatch();
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                SampleManagerImpl.this.baseTime = baseTime;
-                SampleManagerImpl.this.msgId = msgId;
-                for (AbsSampler sampler : anrSample){
-                    sampler.startSample( msgId,true );
-                }
-                //获取当前消息队列的情况
-                Looper.getMainLooper().dump( new MessageQueuePrint() ,"" );
-                Log.d(TAG,"MessageQueue sample end "+latch.getCount());
-                latch.countDown();
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            SampleManagerImpl.this.baseTime = baseTime;
+            SampleManagerImpl.this.msgId = msgId;
+            for (AbsSampler sampler : anrSample){
+                sampler.startSample( msgId,true );
             }
-
+            //获取当前消息队列的情况
+            Looper.getMainLooper().dump( new MessageQueuePrint() ,"" );
+            Log.d(TAG,"MessageQueue sample end "+latch.getCount());
+            latch.countDown();
         });
     }
 
@@ -105,16 +85,13 @@ public class SampleManagerImpl implements ISamplerManager {
             synchronized (SampleManagerImpl.class){
                 if(latch == null){
                     latch = new CountDownLatch(latchCount);
-                    AppExecutors.getInstance().networkIO().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                latch.await();
-                                Log.d(TAG,"createLatch  dispatchMessage");
-                                dispatchMessage();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    AppExecutors.getInstance().networkIO().execute(() -> {
+                        try {
+                            latch.await();
+                            Log.d(TAG,"createLatch  dispatchMessage");
+                            dispatchMessage();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                     });
                 }
@@ -135,7 +112,6 @@ public class SampleManagerImpl implements ISamplerManager {
 
     @Override
     public void onSampleAnrMsg() {
-
     }
 
     @Override

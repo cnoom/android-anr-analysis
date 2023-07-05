@@ -89,11 +89,6 @@ public class BlockBoxConfig {
             return this;
         }
 
-        public Builder addFirstAnrSampleListener(IAnrSamplerListener anrSamplerListener) {
-            config.anrSamplerListeners.add( anrSamplerListener );
-            return this;
-        }
-
         public Builder useAnalyze(boolean useAnalyze){
             config.useAnalyze = useAnalyze;
             return this;

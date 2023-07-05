@@ -121,7 +121,7 @@ class BlockMonitor implements Printer, IBlock, ISystemAnrObserver {
         if (!odd.get()) {
             msgStart(x);
         } else {
-            msgEnd(x);
+            msgEnd();
         }
         odd.set(!odd.get());
 
@@ -154,7 +154,7 @@ class BlockMonitor implements Printer, IBlock, ISystemAnrObserver {
         }
     }
 
-    private void msgEnd(String msg) {
+    private void msgEnd() {
         synchronized (BlockMonitor.class) {
             lastEnd = SystemClock.elapsedRealtime();
             lastCpuEnd = SystemClock.currentThreadTimeMillis();
@@ -201,7 +201,6 @@ class BlockMonitor implements Printer, IBlock, ISystemAnrObserver {
     }
 
     private void handleJank(long dealt) {
-
         if (BoxMessageUtils.isBoxMessageDoFrame(currentMsg) && dealt > mFrameIntervalNanos * config.getJankFrame()) {
             MessageInfo temp = messageInfo;
             messageInfo = new MessageInfo();
@@ -249,12 +248,7 @@ class BlockMonitor implements Printer, IBlock, ISystemAnrObserver {
         if (messageInfo != null) {
             MessageInfo temp = messageInfo;
             messageInfo = null;
-            long msgId = 0L;
-            if (temp.boxMessages != null && temp.boxMessages.size() != 0) {
-                msgId = temp.boxMessages.get(0).getMsgId();
-            }
-//            Log.d(TAG, "add msg wallTime other wallTime : " + temp.wallTime + "  cpuTime " + temp.cpuTime + "   MSG_TYPE : " + MessageInfo.msgTypeToString(temp.msgType) + "  msgId " + msgId);
-            samplerManager.onMsgSample(SystemClock.elapsedRealtimeNanos(), monitorMsgId + "", temp);
+            samplerManager.onMsgSample(SystemClock.elapsedRealtimeNanos(), String.valueOf(monitorMsgId), temp);
         }
         messageInfo = null;
     }
@@ -278,7 +272,7 @@ class BlockMonitor implements Printer, IBlock, ISystemAnrObserver {
             messageInfo.msgType = MessageInfo.MSG_TYPE_ANR;
             messageInfo.boxMessages.add(currentMsg);
             handleMsg();
-            samplerManager.startAnrSample(monitorMsgId + "", SystemClock.elapsedRealtime());
+            samplerManager.startAnrSample(String.valueOf(monitorMsgId), SystemClock.elapsedRealtime());
             samplerManager.messageQueueDispatchAnrFinish();
         }
     }
@@ -344,7 +338,7 @@ class BlockMonitor implements Printer, IBlock, ISystemAnrObserver {
                                 messageInfo.msgType = MessageInfo.MSG_TYPE_ANR;
                                 messageInfo.boxMessages.add(currentMsg);
                                 handleMsg();
-                                samplerManager.startAnrSample(msgId + "", SystemClock.elapsedRealtime());
+                                samplerManager.startAnrSample(String.valueOf(msgId), SystemClock.elapsedRealtime());
                             }
                         }
                     } else {
