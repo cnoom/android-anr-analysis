@@ -12,7 +12,7 @@ import com.txl.blockmoonlighttreasurebox.info.BoxMessage;
 import com.txl.blockmoonlighttreasurebox.info.MessageInfo;
 import com.txl.blockmoonlighttreasurebox.sample.manager.ISamplerManager;
 import com.txl.blockmoonlighttreasurebox.sample.SamplerFactory;
-import com.txl.blockmoonlighttreasurebox.ui.DisplayUtils;
+
 import com.txl.blockmoonlighttreasurebox.utils.BoxMessageUtils;
 import com.txl.blockmoonlighttreasurebox.utils.ReflectUtils;
 
@@ -99,8 +99,8 @@ class BlockMonitor implements Printer, IBlock, ISystemAnrObserver {
 
     public IBlock updateConfig(BlockBoxConfig config) {
         this.config = config;
-        if (applicationContext != null)
-            DisplayUtils.showAnalyzeActivityInLauncher(applicationContext, config.isUseAnalyze());
+//        if (applicationContext != null)
+//            DisplayUtils.showAnalyzeActivityInLauncher(applicationContext, config.isUseAnalyze());
         samplerManager.onConfigChange(config);
         return this;
     }
